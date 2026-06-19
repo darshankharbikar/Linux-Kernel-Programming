@@ -313,17 +313,17 @@ Note: M is not make option but argument passed to it
 
 	b) In kernel, sys_init_module() is run. It does a sequence of operations as follows:
 
-		--> Verifies if the user who attempts to load the module has the permission to do so or not
+		- Verifies if the user who attempts to load the module has the permission to do so or not
 
-		--> After verification, load_module function is called.
+		- After verification, load_module function is called.
 
-		-->	The load_module function assigns temporary memory and copies the elf module from user space to kernel memory using copy_from_user
+		-	The load_module function assigns temporary memory and copies the elf module from user space to kernel memory using copy_from_user
 
-		--> It then checks the sanity of the ELF file ( Verification if it is a proper ELF file )
-		--> Then based on the ELF file interpretation, it generates offset in the temporary memory space allocated. This is called the convenience variables
-		-->	User arguments to the module are also copied to the kernel memory
-		-->	Symbol resolution is done
-		-->	The load_module function returns a reference to the kernel module.
+		- It then checks the sanity of the ELF file ( Verification if it is a proper ELF file )
+		- Then based on the ELF file interpretation, it generates offset in the temporary memory space allocated. This is called the convenience variables
+		-	User arguments to the module are also copied to the kernel memory
+		-	Symbol resolution is done
+		-	The load_module function returns a reference to the kernel module.
 
 		-->	The reference to the module returned by load_module is added to a doubly linked list that has a list of all the modules loaded in the system
 
