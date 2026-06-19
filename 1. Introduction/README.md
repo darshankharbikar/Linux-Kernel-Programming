@@ -321,9 +321,9 @@ Note: M is not make option but argument passed to it
 		-	Symbol resolution is done
 		-	The load_module function returns a reference to the kernel module.
 
-		-->	The reference to the module returned by load_module is added to a doubly linked list that has a list of all the modules loaded in the system
+		-	The reference to the module returned by load_module is added to a doubly linked list that has a list of all the modules loaded in the system
 
-		-->	Then the module_init function in the module code is called
+		-	Then the module_init function in the module code is called
 
 ## Linux dmesg command Tutorial 
  
