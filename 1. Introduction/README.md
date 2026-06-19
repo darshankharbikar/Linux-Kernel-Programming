@@ -7,27 +7,157 @@
 	- one talks to the hardware, 
 	- and one talks to the user
 
-	==================
-	=		             =
-	=   User	       =  ---------
-	= 		           =	        |
-	==================          |
-		|                         |
-		|                         |
-		|                         |
-	==================          |
-	=		             =          |
-	=   Kernel	     =          |
-	= 		           =          |  Via Device File
-	==================          |
-		|                         |
-		|Device Driver 
-		|                         |
-	==================          |
-	=		             =          |
-	=   Hardware	   = ---------
-	= 		           =
-	==================
+# Linux Device Driver Architecture
+
+```text
++------------------------+
+|      User Space        |
+|  (Applications)        |
++-----------+------------+
+            |
+            | System Calls
+            | (open, read, write,
+            |  ioctl, mmap, poll)
+            v
++------------------------+
+|      Kernel Space      |
+|                        |
+|   Device Driver        |
+| (Character/Block/Net)  |
++-----------+------------+
+            |
+            | Hardware Access
+            | (Registers, DMA,
+            |  Interrupts, Buses)
+            v
++------------------------+
+|       Hardware         |
+|                        |
+| UART, SPI, I2C, GPIO   |
+| USB, Ethernet, Display |
+| Sensors, Storage, etc. |
++------------------------+
+```
+
+---
+
+## Device Driver Communication Path
+
+```text
++------------------------+
+|      User Space        |
+|                        |
+|  Application Program   |
++-----------+------------+
+            |
+            | open("/dev/mydevice")
+            | read()
+            | write()
+            | ioctl()
+            v
++------------------------+
+|      Device File       |
+|      /dev/mydevice     |
++-----------+------------+
+            |
+            v
++------------------------+
+|     Device Driver      |
+|                        |
+| file_operations        |
+|  - open()              |
+|  - release()           |
+|  - read()              |
+|  - write()             |
+|  - ioctl()             |
++-----------+------------+
+            |
+            v
++------------------------+
+|       Hardware         |
+|                        |
+| Registers              |
+| DMA Engine             |
+| Interrupt Controller   |
+| Peripheral Bus         |
++------------------------+
+```
+
+---
+
+## Complete Driver Stack
+
+```text
++--------------------------------------------------+
+|                 User Application                 |
++-------------------------+------------------------+
+                          |
+                          | System Calls
+                          v
++--------------------------------------------------+
+|                  Virtual File System (VFS)       |
++-------------------------+------------------------+
+                          |
+                          v
++--------------------------------------------------+
+|                 Device Driver                    |
+|--------------------------------------------------|
+| Character Driver                                 |
+| Block Driver                                     |
+| Network Driver                                   |
++-------------------------+------------------------+
+                          |
+                          | Bus Framework
+                          v
++--------------------------------------------------+
+|            I2C / SPI / USB / PCI Driver          |
++-------------------------+------------------------+
+                          |
+                          v
++--------------------------------------------------+
+|                  Hardware Device                 |
++--------------------------------------------------+
+```
+
+---
+
+## Example: UART Driver Flow
+
+```text
+User Application
+       |
+       | write(fd, "Hello", 5)
+       v
+Device File
+(/dev/ttyS0)
+       |
+       v
+UART Driver
+       |
+       | Programs UART TX Register
+       v
+UART Hardware
+       |
+       | Serial Data Transmission
+       v
+External Device
+```
+
+---
+
+## Key Point
+
+A **device driver** is a kernel-space software component that acts as a translator between:
+
+```text
+User Application
+       ↕
+Device Driver
+       ↕
+Hardware Device
+```
+
+Without a device driver, user-space applications cannot safely and directly access hardware.
 
 ## What is a Kernel Module
 --------------------------
