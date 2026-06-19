@@ -247,20 +247,16 @@ CONFIG_MODULES=y
 ## Licensing
 ---------
 - Module should specify which license you are using MODULE_LICENSE() macro
-
-	"GPL"				[GNU Public License v2 or later]
-	"GPL v2"			[GNU Public License v2]
+```
+	"GPL"						[GNU Public License v2 or later]
+	"GPL v2"					[GNU Public License v2]
 	"GPL and additional rights"	[GNU Public License v2 rights and more]
-	"Dual BSD/GPL"			[GNU Public License v2
-					 or BSD license choice]
-	"Dual MIT/GPL"			[GNU Public License v2
-					 or MIT license choice]
-	"Dual MPL/GPL"			[GNU Public License v2
-					 or Mozilla license choice]
+	"Dual BSD/GPL"				[GNU Public License v2 or BSD license choice]
+	"Dual MIT/GPL"				[GNU Public License v2 or MIT license choice]
+	"Dual MPL/GPL"				[GNU Public License v2 or Mozilla license choice]
+	"Proprietary"				[Non free products]
 
-	"Proprietary"			[Non free products]
-
-
+```
 ## Header Files
 ------------
 - Every kernel module needs to include linux/module.h. for macro expansion of module_init and module_exit
