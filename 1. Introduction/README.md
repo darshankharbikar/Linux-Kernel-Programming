@@ -301,3 +301,69 @@ Note: M is not make option but argument passed to it
 	DEBUG (in order of decreasing priority).
 ```
 - printk() writes to the kernel buffer, whereas printf() writes on the standard output
+
+ 
+## What happens when we do insmod on a module 
+============================================
+- What is a kernel module?
+	- Kernel module is a piece of kernel code which can be added to the running kernel when loaded and can be removed from the kernel when the functionality is removed.
+	- When we do insmod on a module, it performs a series of steps:
+
+	a) It calls init_module() to intimate the kernel that a module is attempted to be loaded and transfers the control to the kernel
+
+	b) In kernel, sys_init_module() is run. It does a sequence of operations as follows:
+
+		--> Verifies if the user who attempts to load the module has the permission to do so or not
+
+		--> After verification, load_module function is called.
+
+		-->	The load_module function assigns temporary memory and copies the elf module from user space to kernel memory using copy_from_user
+
+		--> It then checks the sanity of the ELF file ( Verification if it is a proper ELF file )
+		--> Then based on the ELF file interpretation, it generates offset in the temporary memory space allocated. This is called the convenience variables
+		-->	User arguments to the module are also copied to the kernel memory
+		-->	Symbol resolution is done
+		-->	The load_module function returns a reference to the kernel module.
+
+		-->	The reference to the module returned by load_module is added to a doubly linked list that has a list of all the modules loaded in the system
+
+		-->	Then the module_init function in the module code is called
+
+## Linux dmesg command Tutorial 
+ 
+### What does dmesg command do?
+- Kernel keeps all the logs in a ring buffer.
+- This is done to avoid the boot logs being getting lost until the syslog daemon starts and collects them and stores them in /var/log/dmesg.
+- We will loss the boot up logs if we don't store them in ring buffer.
+- dmesg command is used to control or print kernel ring buffer. Default is to prints messages from the kernel ring buffer on to console.
+
+ 
+### Important dmesg commands:
+
+
+1. Clear Ring buffer: 
+```	
+	$dmesg -c -> Will clear the ring buffer after printing
+	$dmesg -C -> Will clear the ring buffer but does not prints on the console.
+```
+2. Don't Print Timestamps: 
+```
+	$dmesg -t -> Will not print timestamps
+```
+3. Restrict dmesg command to list of levels.
+```
+	$ dmesg -l err,warn will print only error and warn messages
+```
+4. Print human readable timestamps:
+```
+	$dmesg -T will print timestamps in readable format. Note: Timestamp could be inaccurate.
+```
+5. Display the log level in the output:
+```
+	$dmesg -x will add loglevel to the output.
+```
+6. You can combine options, so dmesg -Tx will print both human readable time and loglevel.
+
+
+
+
